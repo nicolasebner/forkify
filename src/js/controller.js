@@ -52,11 +52,14 @@ function controlPagination(goToPage) {
 function controlServings(newServings) {
   model.updateServings(newServings);
 
-  recipeView.render(model.state.recipe);
+  // Hat ganze View Gerendert
+  // recipeView.render(model.state.recipe);
+  recipeView.update(model.state.recipe);
 }
 
 function init() {
   recipeView.addHandlerRender(controlRecipes);
+  recipeView.addHandlerUpdateServings(e => controlServings(e));
   searchView.addHandlerSearch(controlSearchResults);
   paginationView.addHandlerClick(controlPagination);
 }

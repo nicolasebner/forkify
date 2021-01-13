@@ -524,13 +524,16 @@ function controlPagination(goToPage) {
 }
 
 function controlServings(newServings) {
-  model.updateServings(newServings);
+  model.updateServings(newServings); // Hat ganze View Gerendert
+  // recipeView.render(model.state.recipe);
 
-  _recipeView.default.render(model.state.recipe);
+  _recipeView.default.update(model.state.recipe);
 }
 
 function init() {
   _recipeView.default.addHandlerRender(controlRecipes);
+
+  _recipeView.default.addHandlerUpdateServings(e => controlServings(e));
 
   _searchView.default.addHandlerSearch(controlSearchResults);
 
@@ -5137,7 +5140,8 @@ function getSearchResultsPage(page = state.search.page) {
 }
 
 function updateServings(newServings) {
-  state.recipe.ingredients.foreach(ing => {
+  if (newServings < 1) return;
+  state.recipe.ingredients.forEach(ing => {
     ing.quantity = ing.quantity / state.recipe.servings * newServings;
   });
   state.recipe.servings = newServings;
@@ -5237,12 +5241,12 @@ class RecipeView extends _View.default {
       <span class="recipe__info-text">servings</span>
 
       <div class="recipe__info-buttons">
-        <button class="btn--tiny btn--increase-servings">
+        <button class="btn--tiny btn--update-servings" data-servings="${+this._data.servings - 1}">
           <svg>
             <use href="${_icons.default}#icon-minus-circle"></use>
           </svg>
         </button>
-        <button class="btn--tiny btn--increase-servings">
+        <button class="btn--tiny btn--update-servings" data-servings="${+this._data.servings + 1}">
           <svg>
             <use href="${_icons.default}#icon-plus-circle"></use>
           </svg>
@@ -5304,10 +5308,18 @@ class RecipeView extends _View.default {
       ${ing.description}
     </div>
   </li>`;
-  } // addHandlerIncreaseIngClicked(handler){
-  //   document.querySelector("");
-  // }
+  }
 
+  addHandlerUpdateServings(handler) {
+    this._parentElement.addEventListener('click', ev => {
+      const btn = ev.target.closest('.btn--update-servings');
+      if (!btn) return;
+      const {
+        servings
+      } = btn.dataset;
+      if (+servings > 0) handler(+servings);
+    });
+  }
 
 }
 
@@ -5824,6 +5836,29 @@ class View {
     this._clear();
 
     this._parentElement.insertAdjacentHTML('afterbegin', markup);
+  }
+
+  update(data) {
+    if (!data || Array.isArray(data) && data.length === 0) return this.renderError();
+    this._data = data;
+
+    const newMarkup = this._generateMarkup();
+
+    const newDOM = document.createRange().createContextualFragment(newMarkup);
+    const newElements = Array.from(newDOM.querySelectorAll('*'));
+    const curElements = Array.from(this._parentElement.querySelectorAll('*'));
+    newElements.forEach((el, i) => {
+      const curEl = curElements[i]; // Updates Text
+
+      if (!el.isEqualNode(curEl) && el.firstChild?.nodeValue.trim() !== '') {
+        curEl.textContent = el.textContent;
+      } // Updates Attributes
+
+
+      if (!el.isEqualNode(curEl)) {
+        Array.from(el.attributes).forEach(attr => curEl.setAttribute(attr.name, attr.value));
+      }
+    });
   }
 
   _clear() {
