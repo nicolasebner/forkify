@@ -57,3 +57,11 @@ export function getSearchResultsPage(page = state.search.page) {
   const end = page * 10;
   return state.search.results.slice(start, end);
 }
+
+export function updateServings(newServings) {
+  state.recipe.ingredients.foreach(ing => {
+    ing.quantity = (ing.quantity / state.recipe.servings) * newServings;
+  });
+
+  state.recipe.servings = newServings;
+}

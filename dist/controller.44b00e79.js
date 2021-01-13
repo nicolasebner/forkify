@@ -523,6 +523,12 @@ function controlPagination(goToPage) {
   _paginationView.default.render(model.state.search);
 }
 
+function controlServings(newServings) {
+  model.updateServings(newServings);
+
+  _recipeView.default.render(model.state.recipe);
+}
+
 function init() {
   _recipeView.default.addHandlerRender(controlRecipes);
 
@@ -5067,6 +5073,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.loadRecipe = loadRecipe;
 exports.loadSearchResults = loadSearchResults;
 exports.getSearchResultsPage = getSearchResultsPage;
+exports.updateServings = updateServings;
 exports.state = void 0;
 
 var _config = require("./config.js");
@@ -5127,6 +5134,13 @@ function getSearchResultsPage(page = state.search.page) {
   const start = (page - 1) * 10;
   const end = page * 10;
   return state.search.results.slice(start, end);
+}
+
+function updateServings(newServings) {
+  state.recipe.ingredients.foreach(ing => {
+    ing.quantity = ing.quantity / state.recipe.servings * newServings;
+  });
+  state.recipe.servings = newServings;
 }
 },{"./config.js":"09212d541c5c40ff2bd93475a904f8de","./helpers.js":"0e8dcd8a4e1c61cf18f78e1c2563655d"}],"09212d541c5c40ff2bd93475a904f8de":[function(require,module,exports) {
 "use strict";
