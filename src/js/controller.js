@@ -15,6 +15,8 @@ async function controlRecipes() {
     if (!id) return;
     recipeView.renderSpinner();
 
+    resultsView.update(model.getSearchResultsPage());
+
     //Loading Recipe
     await model.loadRecipe(id);
 

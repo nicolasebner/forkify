@@ -488,7 +488,9 @@ async function controlRecipes() {
     const id = window.location.hash.slice(1);
     if (!id) return;
 
-    _recipeView.default.renderSpinner(); //Loading Recipe
+    _recipeView.default.renderSpinner();
+
+    _resultsView.default.update(model.getSearchResultsPage()); //Loading Recipe
 
 
     await model.loadRecipe(id); // Rendering Recipe
@@ -5839,7 +5841,6 @@ class View {
   }
 
   update(data) {
-    if (!data || Array.isArray(data) && data.length === 0) return this.renderError();
     this._data = data;
 
     const newMarkup = this._generateMarkup();
@@ -5981,9 +5982,10 @@ class Resultsview extends _View.default {
   }
 
   _generateMarkupPreview(result) {
+    const id = window.location.hash.slice(1);
     return `
     <li class="preview">
-        <a class="preview__link" href="#${result.id}">
+        <a class="preview__link ${id === result.id ? 'preview__link--active' : ''}" href="#${result.id}">
         <figure class="preview__fig">
             <img src="${result.image}" alt="${result.title}" />
         </figure>
