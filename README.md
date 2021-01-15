@@ -1,6 +1,6 @@
-# forkify Rezeptapp
+# Rezept App
 
 check out the site:
 
-forkify-cookingbook.netlify.app
+https://forkify-cookingbook.netlify.app/
 
