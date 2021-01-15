@@ -6162,7 +6162,7 @@ class Resultsview extends _View.default {
 
     _defineProperty(this, "_parentElement", document.querySelector('.results'));
 
-    _defineProperty(this, "_errorMesseage", 'Es wurde leider kein Rezept gefunden für deine Suche! 😥😥😥');
+    _defineProperty(this, "_errorMesseage", 'Es wurde kein Rezept für deine Suche gefunden! 😥 Die Suche funktioniert nur auf Englisch!');
 
     _defineProperty(this, "_message", '');
   }

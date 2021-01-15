@@ -5,7 +5,7 @@ import previewView from './previewView.js';
 class Resultsview extends View {
   _parentElement = document.querySelector('.results');
   _errorMesseage =
-    'Es wurde leider kein Rezept gefunden für deine Suche! 😥😥😥';
+    'Es wurde kein Rezept für deine Suche gefunden! 😥 Die Suche funktioniert nur auf Englisch!';
   _message = '';
 
   _generateMarkup() {
